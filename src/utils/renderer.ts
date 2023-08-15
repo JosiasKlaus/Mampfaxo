@@ -1,8 +1,7 @@
 import { launch } from 'puppeteer';
-import { render } from 'nunjucks';
+import { configure, render } from 'nunjucks';
 import CleanCSS from 'clean-css';
 
-const baseDirectory = './src/template';
 const pdfHeader = `<div></div>`;
 const pdfFooter = `
 <div style="width: 100%;">
@@ -10,16 +9,23 @@ const pdfFooter = `
 </div>
 `;
 
-export async function renderContractPDF(data: any): Promise<Buffer> {
-    // Minify CSS to insert it into the HTML Template
+export async function renderTemplate(template: string, data: object, styles: string[] = [], filters: { name: string, func: (...args: any[]) => any, async?: boolean | undefined }[] = []): Promise<Buffer> {
+    // Combine and minify stylesheets for use in the HTML Template
+    const stylesheet = new CleanCSS().minify(styles).styles;
+
+    // Configure nunjucks and add filters if any
+    const nunjucks = configure('', { autoescape: true });
+    for (const filter of filters) {
+        nunjucks.addFilter(filter.name, filter.func, filter.async);
+    }
+
     // Render HTML Template with style and data blocks
-    const style = new CleanCSS().minify([`${baseDirectory}/style.css`]).styles;
-    const document = render(`${baseDirectory}/contract.html`, { style: style, data: data });
+    const document = render(template, { style: stylesheet, data: data });
 
     // Create browser and page with pre-rendered content and PDF settings
     const browser = await launch({
-        headless: true, executablePath: process.env.CHROME_BIN,
-        args: ['--no-sandbox', '--headless', '--disable-gpu', '--disable-dev-shm-usage']
+        headless: 'new', executablePath: process.env.CHROME_BIN,
+        args: ['--no-sandbox', '--disable-gpu', '--disable-dev-shm-usage']
     });
 
     const page = await browser.newPage();
