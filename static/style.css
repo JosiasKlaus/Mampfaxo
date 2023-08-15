@@ -1,0 +1,111 @@
+@page {
+    size: 'A4';
+    margin: 25mm;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    background: #2b2b2b;
+}
+
+body {
+    width: 210mm;
+    max-width: 210mm;
+    min-height: 296mm;
+    padding: 0 10mm;
+    
+    display: flex;
+    flex-direction: column;
+
+    box-sizing: border-box;
+    background: #ffffff;
+
+    font-family: sans-serif;
+    font-size: 10pt;
+    line-height: 16pt;
+    text-align: justify;
+}
+
+p {
+    margin-bottom: 1em;
+}
+
+p.title {
+    font-size: 16pt;
+    font-weight: bold;
+}
+
+p.subtitle {
+    font-size: 12pt;
+    font-weight: bold;
+}
+
+p.paragraph {
+    margin-top: 2em;
+}
+
+p.center {
+    text-align: center;
+}
+
+p.margin-none {
+    margin-bottom: 0;
+}
+
+p.margin-half {
+    margin-bottom: 0.5em;
+}
+
+p.margin-double {
+    margin-bottom: 2em;
+}
+
+.container {
+    width: fit-content;
+    margin-bottom: 1em;
+    
+    display: flex;
+    align-self: center;
+    flex-direction: column;
+}
+
+.container p {
+    margin-bottom: 0;
+}
+
+ul, ol {
+    margin: 0;
+    padding-left: 2em;
+}
+
+ul {
+    list-style-type: none;
+}
+
+ol {
+    counter-reset: item;
+}
+
+ol li {
+    counter-increment: item;
+}
+
+ul, ol li::marker {
+    font-size: 1em;
+}
+
+ul li::marker {
+    content: "-    ";
+}
+
+ol li::marker {
+    content: "(" counter(item, numbers) ")    ";
+}
