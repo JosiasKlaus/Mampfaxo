@@ -14,7 +14,7 @@ export let database: Db;
 new MongoClient('mongodb://root:password@192.168.1.250:27017/').connect().then((client) => database = client.db('loewenstark')).catch((err) => { throw err; });
 
 app.use('/school', school);
-app.use('/form', form);
+app.use('/submit', form);
 
 app.listen(process.env.PORT || 8080, () => {
   console.log(`Mampfaxo » Server is running at https://localhost:${process.env.PORT || 8080}`);
