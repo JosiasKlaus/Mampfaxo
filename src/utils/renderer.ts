@@ -2,13 +2,6 @@ import { launch } from 'puppeteer';
 import { configure, render } from 'nunjucks';
 import CleanCSS from 'clean-css';
 
-const pdfHeader = `<div></div>`;
-const pdfFooter = `
-<div style="width: 100%;">
-    <span style="margin: 0 15mm 5mm 0; font-size: 8pt; float: right;" class="pageNumber"></span>
-</div>
-`;
-
 export async function renderTemplate(template: string, data: object, styles: string[] = [], filters: { name: string, func: (...args: any[]) => any, async?: boolean | undefined }[] = []): Promise<Buffer> {
     // Combine and minify stylesheets for use in the HTML Template
     const stylesheet = new CleanCSS().minify(styles).styles;
@@ -30,12 +23,12 @@ export async function renderTemplate(template: string, data: object, styles: str
 
     const page = await browser.newPage();
     await page.setContent(document);
+    await page.waitForNetworkIdle();
     await page.emulateMediaType('print');
 
     // Generate PDF with custom header and footer for page numbering
     const pdf = await page.pdf({
-        preferCSSPageSize: true, displayHeaderFooter: true,
-        headerTemplate: pdfHeader, footerTemplate: pdfFooter
+        preferCSSPageSize: true, printBackground: true
     });
 
     await browser.close();
