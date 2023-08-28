@@ -16,6 +16,10 @@ new MongoClient(process.env.MONGODB_URL || "mongodb://localhost:27017/loewenstar
 app.use('/school', school);
 app.use('/submit', form);
 
-app.listen(process.env.PORT || 8080, () => {
+const server = app.listen(process.env.PORT || 8080, () => {
   console.log(`Mampfaxo » Server is running at http://localhost:${process.env.PORT || 8080}`);
+});
+
+process.on('SIGTERM', () => {
+  server.close();
 });
