@@ -2,6 +2,7 @@ import express, { Express, Router } from 'express';
 import dotenv from 'dotenv';
 import school from './routes/school';
 import form from './routes/form';
+import excel from './routes/excel';
 import { Db, MongoClient } from 'mongodb';
 import cors from 'cors';
 dotenv.config();
@@ -16,6 +17,7 @@ new MongoClient(process.env.MONGODB_URL || "mongodb://localhost:27017/loewenstar
 
 router.use('/school', school);
 router.use('/submit', form);
+router.use('/excel', excel);
 app.use('/api', router);
 
 const server = app.listen(process.env.PORT || 8080, () => {
