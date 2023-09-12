@@ -5,17 +5,10 @@ import { renderTemplate } from '../utils/renderer';
 const router = Router();
 
 router.post("/", async (req, res) => {
-    let schoolCollection = await database.collection("schools");
     let entryCollection = await database.collection("entries");
 
-    if (!req.body.number) {
-        res.send("No school number provided").status(400);
-        return;
-    }
-
-    let school = await schoolCollection?.findOne({ id: req.body.number });
-    if (!school) {
-        res.send("School not found").status(404);
+    if (!req.body.school || !req.body.principal || !req.body.entries) {
+        res.send("Invalid data recieved!").status(400);
         return;
     }
 
@@ -25,9 +18,7 @@ router.post("/", async (req, res) => {
         return;
     }
 
-    let data = { ...req.body, school: school };
-
-    const pdf = await renderTemplate('static/template.html', data, ['./static/style.css'], [
+    const pdf = await renderTemplate('static/template.html', req.body, ['./static/style.css'], [
         { name: 'euroFormater', func: function (val, cb) { return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', minimumFractionDigits: 2 }).format(val); }, async: false }
     ]);
 
