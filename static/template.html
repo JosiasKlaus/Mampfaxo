@@ -80,9 +80,9 @@
     </div>
 
 
-    {% for index, entry in data.entry %}
+    {% for entry in data.entries %}
     <div>
-        <h2>Maßnahme {{ loop.index }}</h2>
+        <h2>Maßnahme {{ loop.index }} ({{ entry.year }})</h2>
         <table>
             <tr>
                 <td>
@@ -105,26 +105,32 @@
                 </td>
             </tr>
             <tr>
+                <td colspan="2">
+                    <b>Anzahl des eingesetzten Personals:</b>
+                    <p>{{ entry.staff_count }} Person(en)</p>
+                </td>
+            </tr>
+            <tr>
                 <td>
-                    <b>Personalkosten gesamt:</b>
-                    <p>{{ entry.cost.sum.staff | euroFormater }}</p>
+                    <b>Personalkosten (inkl. 15% Aufschlag):</b>
+                    <p>{{ entry.summary.staff | euroFormater }}</p>
                 </td>
                 <td>
-                    <b>Sachkosten gesamt:</b>
-                    <p>{{ entry.cost.sum.material | euroFormater }}</p>
+                    <b>Sachkosten:</b>
+                    <p>{{ entry.summary.material | euroFormater }}</p>
                 </td>
             </tr>
         </table>
     </div>
     {% endfor %}
 
-    <div>
+    <!-- <div>
         <h2>Summe und Gesamtkosten</h2>
         <table>
             <tr>
                 <td colspan="2">
                     <b>Summe des eingesetzten Personals:</b>
-                    <p>{{ data.count.staff }} Persone(n)</p>
+                    <p>{{ data.staff_count }} Person(en)</p>
                 </td>
             </tr>
             <tr>
@@ -138,7 +144,7 @@
                 </td>
             </tr>
         </table>
-    </div>
+    </div> -->
 
     <div>
         <h2>Hinweis</h2>
