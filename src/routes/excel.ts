@@ -18,11 +18,11 @@ router.get("/", async (req, res) => {
     let columns: any[] = [];
 
     data.forEach((entry: any) => {
-        Object.values(entry.entry).forEach((value: any) => {
+        Object.values(entry.entries).forEach((value: any) => {
             let staff_cost: any[] = [];
-            Object.values(value.cost.staff).forEach((cost: any) => {
+            Object.values(value.staff).forEach((cost: any) => {
                 if (cost.type == "Beschäftigung Befristeter TV-H Kräfte") {
-                    staff_cost.push(`${cost.type} (${cost.staff.percentage} | ${cost.staff.months} | ${currencyFormatter.format(cost.cost)})`);
+                    staff_cost.push(`${cost.type} (${cost.percentage} | ${cost.months} | ${currencyFormatter.format(cost.cost)})`);
                 } else {
                     staff_cost.push(`${cost.type} (${cost.hours} Stunden | ${currencyFormatter.format(cost.cost)})`);
                 }
@@ -30,22 +30,22 @@ router.get("/", async (req, res) => {
             const staff_string = staff_cost.join("\r\n");
 
             let material_cost: any[] = [];
-            Object.values(value.cost.material).forEach((cost: any) => {
+            Object.values(value.material).forEach((cost: any) => {
                 material_cost.push(`${cost.type} (${currencyFormatter.format(cost.cost)})`);
             });
             const material_string = material_cost.join("\\\n");
 
 
             columns.push({
-                number: entry.number,
+                number: entry.school.id,
                 principal_name: entry.principal.name,
                 principal_email: entry.principal.email,
                 year: value.year,
-                staff_count: entry.count.staff,
+                staff_count: value.staff.filter((staff: any) => staff.type && staff.type != "kein Personal").length,
                 staff: staff_string,
                 material: material_string,
-                staff_cost: currencyFormatter.format(entry.cost.staff),
-                material_cost: currencyFormatter.format(entry.cost.material)
+                staff_cost: currencyFormatter.format(value.staff.reduce((acc: any, staff: any) => acc + (staff.cost || 0), 0)),
+                material_cost: currencyFormatter.format(value.material.reduce((acc: any, material: any) => acc + (material.cost || 0), 0))
             });
         });
     });
