@@ -1,5 +1,6 @@
+import { database, mail_transporter } from '../index';
+
 import { Router } from 'express';
-import { database } from '../index';
 import { renderTemplate } from '../utils/renderer';
 
 const router = Router();
@@ -21,6 +22,20 @@ router.post("/", async (req, res) => {
     const pdf = await renderTemplate('static/template.html', req.body, ['./static/style.css'], [
         { name: 'euroFormater', func: function (val, cb) { return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', minimumFractionDigits: 2 }).format(val); }, async: false }
     ]);
+
+    mail_transporter.sendMail({
+        from: process.env.SMTP_FROM || 'root',
+        to: process.env.APPLICATION_MAIL || 'root',
+        subject: req.body.school.name + ' - Neue Anmeldung',
+        text: 'Neue Anmeldung erhalten!',
+        attachments: [
+            {
+                filename: 'Löwenstark.pdf',
+                content: pdf,
+                contentType: 'application/pdf'
+            }
+        ]
+    });
 
     res.writeHead(200, {
         'Content-Type': 'application/pdf',
