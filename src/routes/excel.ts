@@ -44,8 +44,8 @@ router.get("/", async (req, res) => {
                 staff_count: value.staff.filter((staff: any) => staff.type && staff.type != "kein Personal").length,
                 staff: staff_string,
                 material: material_string,
-                staff_cost: currencyFormatter.format(value.staff.reduce((acc: any, staff: any) => acc + (staff.cost || 0), 0)),
-                material_cost: currencyFormatter.format(value.material.reduce((acc: any, material: any) => acc + (material.cost || 0), 0))
+                staff_cost: value.staff.reduce((acc: any, staff: any) => acc + (staff.cost || 0), 0),
+                material_cost: value.material.reduce((acc: any, material: any) => acc + (material.cost || 0), 0)
             });
         });
     });
