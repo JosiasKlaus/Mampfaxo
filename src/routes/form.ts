@@ -33,8 +33,8 @@ router.post("/", async (req, res) => {
     let material_cost_2023: number = 0;
     req.body.entries?.forEach((entry: any) => {
       if (entry.year === "2023") {
-        entry.staff.forEach((staff: any) => {
-            material_cost_2023 += staff.cost || 0;
+        entry.material.forEach((material: any) => {
+            material_cost_2023 += material.cost || 0;
         });
       }
     });
@@ -55,8 +55,8 @@ router.post("/", async (req, res) => {
     let material_cost_2024: number = 0;
     req.body.entries?.forEach((entry: any) => {
       if (entry.year === "2024") {
-        entry.staff.forEach((staff: any) => {
-            material_cost_2024 += staff.cost || 0;
+        entry.material.forEach((material: any) => {
+            material_cost_2024 += material.cost || 0;
         });
       }
     });
