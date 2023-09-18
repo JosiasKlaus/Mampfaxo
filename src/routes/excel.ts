@@ -38,9 +38,12 @@ router.get("/", async (req, res) => {
 
             columns.push({
                 number: entry.school.id,
+                supervisor: entry.school.supervisor,
+                name: entry.school.name,
                 principal_name: entry.principal.name,
                 principal_email: entry.principal.email,
                 year: value.year,
+                students: value.students,
                 staff_count: value.staff.filter((staff: any) => staff.type && staff.type != "kein Personal").length,
                 staff: staff_string,
                 material: material_string,
@@ -52,9 +55,12 @@ router.get("/", async (req, res) => {
 
     columns.unshift({
         number: "Schulnummer",
+        supervisor: "Schulaufsicht",
+        name: "Name der Schule",
         principal_name: "Schulleiter",
         principal_email: "Schulleiter E-Mail",
         year: "Jahr",
+        students: "Anzahl der SuS",
         staff_count: "Anzahl der Lehrkräfte",
         staff: "Lehrkräfte",
         material: "Material",
