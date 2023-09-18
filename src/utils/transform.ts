@@ -16,7 +16,8 @@ export function autoFitColumns(worksheet: WorkSheet): void {
         let maxCellLength = 0
 
         for (let row = 1; row <= rows; row++) {
-            const cellLength = worksheet[`${col}${row}`].v.length + 1
+            const value = worksheet[`${col}${row}`].v;
+            const cellLength = value ? value.length + 1 : 0
             if (cellLength > maxCellLength) maxCellLength = cellLength
         }
 
