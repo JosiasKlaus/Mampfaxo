@@ -124,27 +124,55 @@
     </div>
     {% endfor %}
 
-    <!-- <div>
+    <div>
         <h2>Summe und Gesamtkosten</h2>
+        <h3>2023</h3>
         <table>
             <tr>
-                <td colspan="2">
-                    <b>Summe des eingesetzten Personals:</b>
-                    <p>{{ data.staff_count }} Person(en)</p>
+                <td class="three">
+                    <b>Summe der Personalkosten</b>
+                    <p>{{ data.staff_cost_2023 | euroFormater }}</p>
+                </td>
+                <td class="three">
+                    <b>Summe der Personalkosten<br>(inkl. 15% Aufschlag)</b>
+                    <p>{{ data.staff_cost_2023_incl | euroFormater }}</p>
+                </td>
+                <td class="three">
+                    <b>Summe der Sachkosten</b>
+                    <p>{{ data.material_cost_2023 | euroFormater }}</p>
                 </td>
             </tr>
             <tr>
-                <td>
-                    <b>Summe der Personalkosten (inkl. 15% Aufschlag)</b>
-                    <p>{{ data.cost.staff | euroFormater }}</p>
-                </td>
-                <td>
-                    <b>Summe der Sachkosten</b>
-                    <p>{{ data.cost.material | euroFormater }}</p>
+                <td colspan="3">
+                    <b>Gesamtkosten</b>
+                    <p>{{ data.total_cost_2023 | euroFormater }}</p>
                 </td>
             </tr>
         </table>
-    </div> -->
+        <h3>2024</h3>
+        <table>
+            <tr>
+                <td class="three">
+                    <b>Summe der Personalkosten</b>
+                    <p>{{ data.staff_cost_2024 | euroFormater }}</p>
+                </td>
+                <td class="three">
+                    <b>Summe der Personalkosten<br>(inkl. 15% Aufschlag)</b>
+                    <p>{{ data.staff_cost_2024_incl | euroFormater }}</p>
+                </td>
+                <td class="three">
+                    <b>Summe der Sachkosten</b>
+                    <p>{{ data.material_cost_2024 | euroFormater }}</p>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <b>Gesamtkosten</b>
+                    <p>{{ data.total_cost_2024 | euroFormater }}</p>
+                </td>
+            </tr>
+        </table>
+    </div>
 
     <div>
         <h2>Hinweis</h2>

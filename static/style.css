@@ -34,6 +34,12 @@ h2 {
     font-size: 12pt;
 }
 
+h3 {
+    margin-top: 1em;
+    font-size: 11pt;
+    font-style: italic;
+}
+
 table {
     border-collapse: collapse;
     width: 100%;
@@ -48,6 +54,10 @@ td {
     border: 1px solid #333333;
     text-align: left;
     padding: 0.5em;
+}
+
+td.three {
+    width: calc(100% / 3);
 }
 
 td * {

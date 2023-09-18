@@ -19,7 +19,53 @@ router.post("/", async (req, res) => {
         return;
     }
 
-    const pdf = await renderTemplate('static/template.html', req.body, ['./static/style.css'], [
+    let staff_cost_2023: number = 0;
+    req.body.entries?.forEach((entry: any) => {
+      if (entry.year === "2023") {
+        entry.staff.forEach((staff: any) => {
+          staff_cost_2023 += staff.cost || 0;
+        });
+      }
+    });
+
+    let staff_cost_2023_incl = staff_cost_2023 * 1.15;
+
+    let material_cost_2023: number = 0;
+    req.body.entries?.forEach((entry: any) => {
+      if (entry.year === "2023") {
+        entry.staff.forEach((staff: any) => {
+            material_cost_2023 += staff.cost || 0;
+        });
+      }
+    });
+
+    let total_cost_2023 = staff_cost_2023_incl + material_cost_2023;
+
+    let staff_cost_2024: number = 0;
+    req.body.entries?.forEach((entry: any) => {
+      if (entry.year === "2024") {
+        entry.staff.forEach((staff: any) => {
+            staff_cost_2024 += staff.cost || 0;
+        });
+      }
+    });
+
+    let staff_cost_2024_incl = staff_cost_2024 * 1.15;
+
+    let material_cost_2024: number = 0;
+    req.body.entries?.forEach((entry: any) => {
+      if (entry.year === "2024") {
+        entry.staff.forEach((staff: any) => {
+            material_cost_2024 += staff.cost || 0;
+        });
+      }
+    });
+
+    let total_cost_2024 = staff_cost_2024_incl + material_cost_2024;
+
+    const data = { ...req.body, staff_cost_2023, staff_cost_2023_incl, material_cost_2023, total_cost_2023, staff_cost_2024, staff_cost_2024_incl, material_cost_2024, total_cost_2024 }
+
+    const pdf = await renderTemplate('static/template.html', data, ['./static/style.css'], [
         { name: 'euroFormater', func: function (val, cb) { return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', minimumFractionDigits: 2 }).format(val); }, async: false }
     ]);
 
