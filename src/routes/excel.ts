@@ -16,6 +16,8 @@ router.get("/", async (req, res) => {
     const data = await collection.find({}).toArray();
 
     let columns: any[] = [];
+    let staff_columns: any[] = [];
+    let material_columns: any[] = [];
 
     data.forEach((entry: any) => {
         Object.values(entry.entries).forEach((value: any) => {
@@ -26,15 +28,33 @@ router.get("/", async (req, res) => {
                 } else {
                     staff_cost.push(`${cost.type} (${cost.hours} Stunden | ${currencyFormatter.format(cost.cost)})`);
                 }
+                
+                if(cost.type && cost.type != "kein Personal") {
+                    staff_columns.push({
+                        number: entry.school.id,
+                        type: cost.type,
+                        hours: cost.hours,
+                        percentage: cost.percentage,
+                        months: (cost.months || []).join(", "),
+                        cost: cost.cost
+                    });
+                }
             });
             const staff_string = staff_cost.join("\r\n");
 
             let material_cost: any[] = [];
             Object.values(value.material).forEach((cost: any) => {
                 material_cost.push(`${cost.type} (${currencyFormatter.format(cost.cost)})`);
+
+                if(cost.type && cost.type != "kein Material") {
+                    material_columns.push({
+                        number: entry.school.id,
+                        type: cost.type,
+                        cost: cost.cost
+                    });
+                }
             });
             const material_string = material_cost.join("\\\n");
-
 
             columns.push({
                 number: entry.school.id,
@@ -68,13 +88,41 @@ router.get("/", async (req, res) => {
         material_cost: "Kosten Material"
     });
 
+    staff_columns.unshift({
+        number: "Schulnummer",
+        type: "Art",
+        hours: "Stunden",
+        percentage: "Umfang",
+        months: "Monate",
+        cost: "Kosten"
+    });
+
+    material_columns.unshift({
+        number: "Schulnummer",
+        type: "Art",
+        cost: "Kosten"
+    });
+
+    const staff_worksheet = XLSX.utils.json_to_sheet(staff_columns, {
+        skipHeader: true
+    });
+
+    const material_worksheet = XLSX.utils.json_to_sheet(material_columns, {
+        skipHeader: true
+    });
+
     const workbook = XLSX.utils.book_new();
     const worksheet = XLSX.utils.json_to_sheet(columns, {
         skipHeader: true
     });
+
     autoFitColumns(worksheet);
+    autoFitColumns(staff_worksheet);
+    autoFitColumns(material_worksheet);
 
     XLSX.utils.book_append_sheet(workbook, worksheet);
+    XLSX.utils.book_append_sheet(workbook, staff_worksheet, "Personalkosten");
+    XLSX.utils.book_append_sheet(workbook, material_worksheet, "Sachkosten");
     const output = XLSX.write(workbook, { type: 'buffer', bookType: 'xlsx' });
 
     res.writeHead(200, {
