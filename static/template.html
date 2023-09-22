@@ -113,7 +113,7 @@
             <tr>
                 <td>
                     <b>Personalkosten (inkl. 15% Aufschlag):</b>
-                    <p>{{ entry.summary.staff | euroFormater }}</p>
+                    <p>{{ (entry.summary.staff * 1.15) | euroFormater }}</p>
                 </td>
                 <td>
                     <b>Sachkosten:</b>
