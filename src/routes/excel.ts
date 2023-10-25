@@ -18,6 +18,9 @@ router.get("/", async (req, res) => {
     let columns: any[] = [];
     let staff_columns: any[] = [];
     let material_columns: any[] = [];
+    let type_columns: any[] = [];
+    let grade_columns: any[] = [];
+    let subject_columns: any[] = [];
 
     data.forEach((entry: any) => {
         Object.values(entry.entries).forEach((value: any) => {
@@ -55,6 +58,32 @@ router.get("/", async (req, res) => {
                 }
             });
             const material_string = material_cost.join("\\\n");
+
+            if(value.type) {
+                type_columns.push({
+                    number: entry.school.id,
+                    type: value.type,
+                });
+            }
+
+            if(value.grades) {
+                value.grades.split(', ').forEach((grade: any) => {
+                    grade_columns.push({
+                        number: entry.school.id,
+                        grade: grade,
+                    });
+                });
+            }
+            
+
+            if(value.subjects) {
+                value.subjects.split(', ').forEach((subject: any) => {
+                    subject_columns.push({
+                        number: entry.school.id,
+                        subject: subject,
+                    });
+                });
+            }
 
             columns.push({
                 number: entry.school.id,
@@ -103,11 +132,38 @@ router.get("/", async (req, res) => {
         cost: "Kosten"
     });
 
+    type_columns.unshift({
+        number: "Schulnummer",
+        type: "Art"
+    });
+
+    grade_columns.unshift({
+        number: "Schulnummer",
+        grade: "Klassenstufe"
+    });
+
+    subject_columns.unshift({
+        number: "Schulnummer",
+        subject: "Fach"
+    });
+
     const staff_worksheet = XLSX.utils.json_to_sheet(staff_columns, {
         skipHeader: true
     });
 
     const material_worksheet = XLSX.utils.json_to_sheet(material_columns, {
+        skipHeader: true
+    });
+
+    const type_worksheet = XLSX.utils.json_to_sheet(type_columns, {
+        skipHeader: true
+    });
+
+    const grade_worksheet = XLSX.utils.json_to_sheet(grade_columns, {
+        skipHeader: true
+    });
+
+    const subject_worksheet = XLSX.utils.json_to_sheet(subject_columns, {
         skipHeader: true
     });
 
@@ -119,10 +175,16 @@ router.get("/", async (req, res) => {
     autoFitColumns(worksheet);
     autoFitColumns(staff_worksheet);
     autoFitColumns(material_worksheet);
+    autoFitColumns(type_worksheet);
+    autoFitColumns(grade_worksheet);
+    autoFitColumns(subject_worksheet);
 
     XLSX.utils.book_append_sheet(workbook, worksheet);
     XLSX.utils.book_append_sheet(workbook, staff_worksheet, "Personalkosten");
     XLSX.utils.book_append_sheet(workbook, material_worksheet, "Sachkosten");
+    XLSX.utils.book_append_sheet(workbook, type_worksheet, "Typ");
+    XLSX.utils.book_append_sheet(workbook, grade_worksheet, "Klassenstufe");
+    XLSX.utils.book_append_sheet(workbook, subject_worksheet, "Fach");
     const output = XLSX.write(workbook, { type: 'buffer', bookType: 'xlsx' });
 
     res.writeHead(200, {
